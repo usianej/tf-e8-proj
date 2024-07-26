@@ -7,10 +7,12 @@ on:
   pull_request:
     branches:
     - main
-  workflow_run:
-    workflows: ["Terraform Unit Tests"]
-    types:
-      - completed
+  #workflow_run:
+  #  workflows: ["Terraform Unit Tests"]
+  #  types:
+  #    - completed
+
+# OIDC Authentication
 #Special permissions required for OIDC authentication
 permissions:
   id-token: write
