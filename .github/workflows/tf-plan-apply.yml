@@ -66,7 +66,7 @@ jobs:
 
     # Save plan to artifacts  
     - name: Publish Terraform Plan
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: tfplan
         path: tfplan
@@ -134,7 +134,7 @@ jobs:
     
     # Download saved plan from artifacts  
     - name: Download Terraform Plan
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v2
       with:
         name: tfplan
 
