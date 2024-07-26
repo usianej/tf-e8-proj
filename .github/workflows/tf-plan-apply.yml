@@ -1,10 +1,18 @@
 name: 'Terraform Plan/Apply'
 
 on:
-  workflow_run:
-    workflows: ["Terraform Unit Tests"]
-    types:
-      - completed
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+  #workflow_run:
+  #  workflows: ["Terraform Unit Tests"]
+  #  types:
+  #    - completed
+
+# OIDC Authentication
 #Special permissions required for OIDC authentication
 permissions:
   id-token: write
@@ -66,7 +74,7 @@ jobs:
 
     # Save plan to artifacts  
     - name: Publish Terraform Plan
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: tfplan
         path: tfplan
