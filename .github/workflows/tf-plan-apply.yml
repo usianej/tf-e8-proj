@@ -10,9 +10,9 @@ on:
   workflow_run:
     workflows: ["Terraform Unit Tests"]
     branches:
-      - main
+     - main
     types:
-      - completed
+     - completed
       
 # OIDC Authentication
 #Special permissions required for OIDC authentication
@@ -31,6 +31,7 @@ jobs:
   terraform-plan:
     name: 'Terraform Plan'
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success' }}
     environment: PROD
     env:
       #this is needed since we are running terraform with read-only permissions
