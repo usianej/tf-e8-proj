@@ -1,10 +1,14 @@
 name: 'Terraform Plan/Apply'
 
 on:
-  push:
-    branches:
-    - main
-
+  #push:
+  #  branches:
+  #  - main
+  workflow_run:
+    workflows: ["Terraform Unit Tests"]
+    types:
+      - completed
+      
 # OIDC Authentication
 #Special permissions required for OIDC authentication
 permissions:
@@ -30,22 +34,6 @@ jobs:
       tfplanExitCode: ${{ steps.tf-plan.outputs.exitcode }}
 
     steps:
-      # Wait for Terraform Unit Tests to complete successfully
-    - name: Wait for Terraform Unit Tests
-      uses: actions/github-script@v6
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const checks = await github.rest.checks.listForRef({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            ref: context.payload.pull_request.head.sha,
-          });
-          const testWorkflow = checks.data.check_runs.find(run => run.name === 'Terraform Unit Tests');
-          if (testWorkflow && testWorkflow.conclusion !== 'success') {
-            throw new Error('Terraform Unit Tests did not complete successfully');
-          }
-            
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
