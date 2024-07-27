@@ -6,6 +6,8 @@ on:
   #  - main
   workflow_run:
     workflows: ["Terraform Unit Tests"]
+    branches:
+      - main
     types:
       - completed
       
