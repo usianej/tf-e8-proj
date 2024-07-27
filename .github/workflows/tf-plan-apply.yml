@@ -8,6 +8,7 @@ on:
     workflows: ["Terraform Unit Tests"]
     types:
       - completed
+      
 # OIDC Authentication
 #Special permissions required for OIDC authentication
 permissions:
