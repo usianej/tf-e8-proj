@@ -6,7 +6,7 @@ on:
   #  - main
   pull_request:
     branches:
-    - main
+     - main
   workflow_run:
     workflows: ["Terraform Unit Tests"]
     branches:
