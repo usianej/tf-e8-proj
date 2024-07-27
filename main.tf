@@ -20,6 +20,10 @@ provider "azurerm" {
   use_oidc = true
 }
 
+resource "azurerm_resource_group" "state-demo-secure" {
+  name     = "champions-group"
+  location = "eastus"
+}
 resource "azurerm_resource_group" "state-test-main" {
   name     = "test-main"
   location = "eastus"
