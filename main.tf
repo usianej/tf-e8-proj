@@ -24,3 +24,7 @@ resource "azurerm_resource_group" "state-demo-secure" {
   name     = "champions-group"
   location = "eastus"
 }
+resource "azurerm_resource_group" "state-test-main" {
+  name     = "test-main"
+  location = "eastus"
+}
