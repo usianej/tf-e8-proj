@@ -12,14 +12,12 @@ terraform {
     key                  = "terraform.tfstate"
     use_oidc             = true
   }
-
 }
 
 provider "azurerm" {
   features {}
   use_oidc = true
 }
-
 
 # Resource Group
 resource "azurerm_resource_group" "main_rg" {
@@ -87,6 +85,78 @@ resource "azurerm_storage_account" "main_storage" {
   location                 = azurerm_resource_group.main_rg.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
+  allow_blob_public_access = false
+  min_tls_version          = "TLS1_2"
+  shared_access_key_enabled = false
+
+  blob_properties {
+    delete_retention_policy {
+      days = 7
+    }
+  }
+
+  network_rules {
+    default_action             = "Deny"
+    bypass                     = ["AzureServices"]
+    ip_rules                   = []
+    virtual_network_subnet_ids = []
+  }
+
+  logging {
+    delete                = true
+    read                  = true
+    write                 = true
+    retention_policy_days = 7
+  }
+
+  sas_policy {
+    expiry_period = "7.00:00:00"
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  encryption {
+    services {
+      blob {
+        enabled           = true
+        key_type          = "Account"
+        key_vault_key_id  = azurerm_key_vault_key.example.id
+      }
+    }
+  }
+}
+
+# Key Vault for Customer Managed Key
+resource "azurerm_key_vault" "example" {
+  name                = "examplekeyvault"
+  location            = azurerm_resource_group.main_rg.location
+  resource_group_name = azurerm_resource_group.main_rg.name
+  tenant_id           = data.azurerm_client_config.current.tenant_id
+  sku_name            = "standard"
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
+
+    key_permissions = [
+      "Get",
+      "List",
+      "Create",
+      "Update",
+      "Delete",
+      "Purge",
+    ]
+  }
+}
+
+resource "azurerm_key_vault_key" "example" {
+  name         = "examplekey"
+  key_vault_id = azurerm_key_vault.example.id
+  key_type     = "RSA"
+  key_size     = 2048
+  key_opts     = ["decrypt", "encrypt", "sign", "verify", "wrapKey", "unwrapKey"]
 }
 
 # Example Resource Groups
