@@ -101,44 +101,6 @@ resource "azurerm_storage_account" "main_storage" {
   account_replication_type = "LRS"
 }
 
-# App Service Plan
-resource "azurerm_app_service_plan" "main_app_service_plan" {
-  name                = "main-app-service-plan"
-  location            = azurerm_resource_group.main_rg.location
-  resource_group_name = azurerm_resource_group.main_rg.name
-  sku {
-    tier = "Free"
-    size = "F1"
-  }
-}
-
-# App Service
-resource "azurerm_app_service" "main_app_service" {
-  name                = "main-app-service"
-  location            = azurerm_resource_group.main_rg.location
-  resource_group_name = azurerm_resource_group.main_rg.name
-  app_service_plan_id = azurerm_app_service_plan.main_app_service_plan.id
-}
-
-# Cosmos DB Account
-resource "azurerm_cosmosdb_account" "main_cosmosdb" {
-  name                = "main-cosmosdb"
-  location            = azurerm_resource_group.main_rg.location
-  resource_group_name = azurerm_resource_group.main_rg.name
-  offer_type          = "Standard"
-  kind                = "GlobalDocumentDB"
-  consistency_policy {
-    consistency_level = "Session"
-  }
-  geo_location {
-    location          = azurerm_resource_group.main_rg.location
-    failover_priority = 0
-  }
-  capabilities {
-    name = "EnableFreeTier"
-  }
-}
-
 # Example Resource Groups
 resource "azurerm_resource_group" "champions_group" {
   name     = "champions-group"
